@@ -1,4 +1,5 @@
 import { Rocket, UserCircle } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const LandingPage = () => {
   return (
@@ -52,10 +53,12 @@ const LandingPage = () => {
 
         {/* Buttons */}
         <div className='flex flex-col items-center gap-4 mt-12 sm:flex-row'>
-          <button className='group relative flex items-center gap-2 px-8 py-4 font-bold text-white transition-all bg-indigo-600 rounded-xl hover:bg-indigo-500 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(79,70,229,0.4)]'>
-            <Rocket className='w-5 h-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1' />
-            Get Started
-          </button>
+          <Link to='/auth'>
+            <button className='group relative flex items-center gap-2 px-8 py-4 font-bold text-white transition-all bg-indigo-600 rounded-xl hover:bg-indigo-500 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(79,70,229,0.4)]'>
+              <Rocket className='w-5 h-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1' />
+              Get Started
+            </button>
+          </Link>
 
           <button className='flex items-center gap-2 px-8 py-4 font-bold transition-all border rounded-xl border-slate-800 bg-slate-900/50 hover:bg-slate-800 hover:border-slate-700 text-slate-300 active:scale-95'>
             <UserCircle className='w-5 h-5 text-indigo-400' />
