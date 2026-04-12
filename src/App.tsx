@@ -4,12 +4,12 @@ import './App.css'
 import LandingPage from './components/LandingPage'
 import AuthPage from './components/AuthPage'
 import { useAuthStore } from './stores/useAuthStore'
+import Dashboard from './components/Dashboard'
 
 function App() {
   const { user, loading } = useAuthStore()
 
-  // Show a dark loader while checking the Supabase session
-  if (loading) return <div className='min-h-screen bg-black' />
+  // if (loading) return <div className='min-h-screen bg-black' />
 
   return (
     <Routes>
@@ -23,21 +23,7 @@ function App() {
       />
 
       {/* Protected Dashboard Route */}
-      <Route
-        path='/dashboard'
-        element={
-          user ? (
-            <div className='text-white p-20'>
-              Willkommen im Dashboard, {user.email}!
-            </div>
-          ) : (
-            <Navigate to='/auth' />
-          )
-        }
-      />
-
-      {/* 404 Catch-all */}
-      <Route path='*' element={<Navigate to='/' />} />
+      <Route path='/dashboard' element={<Dashboard />} />
     </Routes>
   )
 }
