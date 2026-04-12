@@ -1,13 +1,29 @@
 import { useAuthStore } from '../stores/useAuthStore'
 import { supabase } from '../lib/supabase'
 import { LogOut, ShieldCheck, User, Clock, Key } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const Dashboard = () => {
-  const { user, clearAuth } = useAuthStore()
+  const navigate = useNavigate()
+  const { user, clearAuth } = useAuthStore() // Make sure clearAuth is in your store
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
-    clearAuth()
+    try {
+      // 1. Kill the session on Supabase
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
+
+      // 2. Wipe the local Zustand state
+      clearAuth()
+
+      // 3. Redirect to the landing page or auth page
+      navigate('/')
+
+      console.log('Logout successful, session cleared.')
+    } catch (error) {
+      console.error('Error logging out:', error)
+      alert('Error signing out. Check console.')
+    }
   }
 
   return (

@@ -1,8 +1,43 @@
 import { useState } from 'react'
 import { Mail, Lock, ArrowRight, Globe, GitBranch } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const navigate = useNavigate()
+
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      if (isLogin) {
+        // LOGIN LOGIC
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        })
+        if (error) throw error
+      } else {
+        // SIGNUP LOGIC
+        const { error } = await supabase.auth.signUp({ email, password })
+        if (error) throw error
+        alert('Check your email for the confirmation link!')
+      }
+
+      // If successful, the onAuthStateChange in App.tsx will
+      // update the store, and we can move to dashboard
+      navigate('/dashboard')
+    } catch (error: any) {
+      alert(error.message || 'An error occurred')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <div className='min-h-screen bg-black flex flex-col justify-center items-center px-6 selection:bg-indigo-500/30'>
@@ -26,17 +61,19 @@ const AuthPage = () => {
 
         {/* Auth Card */}
         <div className='bg-slate-900/40 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl'>
-          <form className='space-y-5' onSubmit={(e) => e.preventDefault()}>
+          <form className='space-y-5' onSubmit={handleAuth}>
             <div>
               <label className='block text-sm font-medium text-slate-300 mb-2'>
                 Email Address
               </label>
               <div className='relative group'>
-                <Mail className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors' />
+                <Mail className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500' />
                 <input
                   type='email'
-                  placeholder='name@company.com'
-                  className='w-full bg-black/50 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className='w-full bg-black/50 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-white focus:ring-2 focus:ring-indigo-500/50 outline-none'
                 />
               </div>
             </div>
@@ -46,17 +83,26 @@ const AuthPage = () => {
                 Password
               </label>
               <div className='relative group'>
-                <Lock className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-indigo-400 transition-colors' />
+                <Lock className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500' />
                 <input
                   type='password'
-                  placeholder='••••••••'
-                  className='w-full bg-black/50 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className='w-full bg-black/50 border border-slate-800 rounded-xl py-3 pl-11 pr-4 text-white focus:ring-2 focus:ring-indigo-500/50 outline-none'
                 />
               </div>
             </div>
 
-            <button className='w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-indigo-500/20'>
-              {isLogin ? 'Sign In' : 'Create Account'}
+            <button
+              disabled={isSubmitting}
+              className='w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98]'
+            >
+              {isSubmitting
+                ? 'Processing...'
+                : !isLogin
+                  ? 'Sign In'
+                  : 'Create Account'}
               <ArrowRight className='w-4 h-4' />
             </button>
           </form>
@@ -86,12 +132,12 @@ const AuthPage = () => {
 
         {/* Toggle link */}
         <p className='text-center mt-8 text-slate-500 text-sm'>
-          {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
+          {!isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
           <button
             onClick={() => setIsLogin(!isLogin)}
             className='text-indigo-400 hover:text-indigo-300 font-semibold underline underline-offset-4 transition-colors'
           >
-            {isLogin ? 'Sign up for free' : 'Log in here'}
+            {!isLogin ? 'Sign up for free' : 'Log in here'}
           </button>
         </p>
       </div>
