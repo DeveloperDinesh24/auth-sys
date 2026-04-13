@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Mail, Lock, ArrowRight, Globe, GitBranch } from 'lucide-react'
+import { Mail, Lock, ArrowRight, Globe, GitFork } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
@@ -36,6 +36,22 @@ const AuthPage = () => {
       alert(error instanceof Error ? error.message : 'An error occurred')
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleSocialLogin = async (provider: 'google' | 'github') => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          // window.location.origin automatically becomes
+          // http://localhost:5173 OR https://your-app.vercel.app
+          redirectTo: window.location.origin,
+        },
+      })
+      if (error) throw error
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Social login failed')
     }
   }
 
@@ -121,11 +137,17 @@ const AuthPage = () => {
 
           {/* Social Logins */}
           <div className='grid grid-cols-2 gap-4'>
-            <button className='flex items-center justify-center gap-2 bg-black/40 border border-slate-800 hover:bg-slate-800 py-2.5 rounded-xl text-sm font-medium text-slate-300 transition-all'>
+            <button
+              onClick={() => handleSocialLogin('google')}
+              className='flex items-center justify-center gap-2 bg-black/40 border border-slate-800 hover:bg-slate-800 py-2.5 rounded-xl text-sm font-medium text-slate-300 transition-all'
+            >
               <Globe className='w-4 h-4' /> Google
             </button>
-            <button className='flex items-center justify-center gap-2 bg-black/40 border border-slate-800 hover:bg-slate-800 py-2.5 rounded-xl text-sm font-medium text-slate-300 transition-all'>
-              <GitBranch className='w-4 h-4' /> Github
+            <button
+              onClick={() => handleSocialLogin('github')}
+              className='flex items-center justify-center gap-2 bg-black/40 border border-slate-800 hover:bg-slate-800 py-2.5 rounded-xl text-sm font-medium text-slate-300 transition-all'
+            >
+              <GitFork className='w-4 h-4' /> Github
             </button>
           </div>
         </div>
