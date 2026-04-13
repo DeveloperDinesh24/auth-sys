@@ -32,8 +32,8 @@ const AuthPage = () => {
       // If successful, the onAuthStateChange in App.tsx will
       // update the store, and we can move to dashboard
       navigate('/dashboard')
-    } catch (error: any) {
-      alert(error.message || 'An error occurred')
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'An error occurred')
     } finally {
       setIsSubmitting(false)
     }
