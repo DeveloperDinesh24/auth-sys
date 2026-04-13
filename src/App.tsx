@@ -5,11 +5,37 @@ import LandingPage from './components/LandingPage'
 import AuthPage from './components/AuthPage'
 import { useAuthStore } from './stores/useAuthStore'
 import Dashboard from './components/Dashboard'
+import { useEffect } from 'react'
+import { supabase } from './lib/supabase'
 
 function App() {
-  const { user, loading } = useAuthStore()
+  const { user, loading, setUser } = useAuthStore()
 
-  // if (loading) return <div className='min-h-screen bg-black' />
+  useEffect(() => {
+    // Define function to check for existing session on app load
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+      setUser(session?.user ?? null)
+      // setUser automatically sets loading to false in your store!
+    }
+
+    // 1. Check for an existing session on mount
+    checkSession()
+
+    // 2. Listen for changes (Login, Logout, Token Refresh)
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    // 3. Cleanup subscription on unmount
+    return () => subscription.unsubscribe()
+  }, [setUser])
+
+  if (loading) return <div className='min-h-screen bg-black' />
 
   return (
     <Routes>

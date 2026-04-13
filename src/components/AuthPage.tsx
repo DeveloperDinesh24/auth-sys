@@ -10,7 +10,7 @@ const AuthPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
 
-  const handleAuth = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
 
