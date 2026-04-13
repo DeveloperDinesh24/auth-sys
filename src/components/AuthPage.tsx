@@ -44,9 +44,7 @@ const AuthPage = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          // window.location.origin automatically becomes
-          // http://localhost:5173 OR https://your-app.vercel.app
-          redirectTo: window.location.origin,
+          redirectTo: `${window.location.origin}/dashboard`,
         },
       })
       if (error) throw error
@@ -112,7 +110,7 @@ const AuthPage = () => {
 
             <button
               disabled={isSubmitting}
-              className='w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98]'
+              className='w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer'
             >
               {isSubmitting
                 ? 'Processing...'
@@ -139,13 +137,13 @@ const AuthPage = () => {
           <div className='grid grid-cols-2 gap-4'>
             <button
               onClick={() => handleSocialLogin('google')}
-              className='flex items-center justify-center gap-2 bg-black/40 border border-slate-800 hover:bg-slate-800 py-2.5 rounded-xl text-sm font-medium text-slate-300 transition-all'
+              className='flex items-center justify-center gap-2 bg-black/40 border border-slate-800 hover:bg-slate-800 py-2.5 rounded-xl text-sm font-medium text-slate-300 transition-all cursor-pointer'
             >
               <Globe className='w-4 h-4' /> Google
             </button>
             <button
               onClick={() => handleSocialLogin('github')}
-              className='flex items-center justify-center gap-2 bg-black/40 border border-slate-800 hover:bg-slate-800 py-2.5 rounded-xl text-sm font-medium text-slate-300 transition-all'
+              className='flex items-center justify-center gap-2 bg-black/40 border border-slate-800 hover:bg-slate-800 py-2.5 rounded-xl text-sm font-medium text-slate-300 transition-all cursor-pointer'
             >
               <GitFork className='w-4 h-4' /> Github
             </button>
@@ -157,7 +155,7 @@ const AuthPage = () => {
           {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className='text-indigo-400 hover:text-indigo-300 font-semibold underline underline-offset-4 transition-colors'
+            className='text-indigo-400 hover:text-indigo-300 font-semibold underline underline-offset-4 transition-colors cursor-pointer'
           >
             {isLogin ? 'Sign up for free' : 'Log in here'}
           </button>

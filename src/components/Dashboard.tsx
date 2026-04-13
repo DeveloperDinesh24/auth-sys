@@ -44,7 +44,7 @@ const Dashboard = () => {
           </div>
           <button
             onClick={handleLogout}
-            className='flex items-center gap-2 bg-slate-900 hover:bg-red-950/30 border border-slate-800 hover:border-red-500/50 px-4 py-2 rounded-lg text-sm font-medium transition-all group'
+            className='flex items-center gap-2 bg-slate-900 hover:bg-red-950/30 border border-slate-800 hover:border-red-500/50 px-4 py-2 rounded-lg text-sm font-medium transition-all group cursor-pointer'
           >
             <LogOut className='w-4 h-4 text-slate-400 group-hover:text-red-500' />
             <span>Sign Out</span>
