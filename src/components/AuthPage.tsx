@@ -100,7 +100,7 @@ const AuthPage = () => {
             >
               {isSubmitting
                 ? 'Processing...'
-                : !isLogin
+                : isLogin
                   ? 'Sign In'
                   : 'Create Account'}
               <ArrowRight className='w-4 h-4' />
@@ -132,12 +132,12 @@ const AuthPage = () => {
 
         {/* Toggle link */}
         <p className='text-center mt-8 text-slate-500 text-sm'>
-          {!isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
+          {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
           <button
             onClick={() => setIsLogin(!isLogin)}
             className='text-indigo-400 hover:text-indigo-300 font-semibold underline underline-offset-4 transition-colors'
           >
-            {!isLogin ? 'Sign up for free' : 'Log in here'}
+            {isLogin ? 'Sign up for free' : 'Log in here'}
           </button>
         </p>
       </div>
